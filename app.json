@@ -17,13 +17,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.pole4ka.SMoney"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+      "package": "com.pole4ka.SMoney"
     },
     "web": {
       "favicon": "./assets/favicon.png"

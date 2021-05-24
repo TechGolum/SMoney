@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    width : '100%'
   },
   header:{
     marginTop : 50,
@@ -48,7 +49,8 @@ const styles = StyleSheet.create({
   },
   expView : {
     marginTop : 30,
-    marginLeft : 40,
+    width : '80%',
+    alignSelf : 'center'
   },
   expText:{
     fontSize : 30,
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
     height : 50,
     justifyContent : 'center',
     alignItems : 'center', 
-    borderRadius : 10
+    borderRadius : 10,
+    alignSelf : 'center'
   }
 });

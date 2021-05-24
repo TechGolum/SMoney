@@ -22,7 +22,7 @@ export default function NewExpense(props)
 
                 <Text style = {styles.header}>Add new expence</Text>
 
-                <View>
+                <View style = {{width : '100%', alignItems : 'center'}}>
                     <Text style = {styles.stext}>Choose category:</Text>
                     <View style = {styles.categories}>
                         <Category name = 'school' text = 'Study' onTouchEnd = {() => {setSelected('Study')}} selected = {selected}/>
@@ -38,7 +38,7 @@ export default function NewExpense(props)
                     </View>
                 </View>
 
-                <View>
+                <View style = {{width : '100%', alignItems : 'center'}}>
                     <Text style = {styles.stext}>How much have you spent?</Text>
                     <TextInput placeholder = "  $$$" style = {styles.input} onChangeText = {setText} value = {' ' + text.replace(' ', '')} keyboardType  = 'numeric'/>
                 </View>
@@ -70,12 +70,12 @@ const styles = StyleSheet.create({
         backgroundColor : 'white',
         bottom : 0,
         width : '100%',
-        height : '90%',
-        marginLeft : 30
+        height : '100%',
     },
     header : {
-        marginTop : 50,
+        marginTop : 20,
         marginBottom : 20,
+        marginLeft : 30,
         fontSize : 30,
         fontWeight : '600'
     },
@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
         borderRadius : 10,
         justifyContent : 'center',
         alignItems : 'center',
-        marginTop : 30
+        marginTop : 30,
+        alignSelf : 'center'
     },
     input : {
         width : 250,
