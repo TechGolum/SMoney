@@ -1,16 +1,24 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, FlatList } from 'react-native';
 
-export default function ExpensesNumbers()
+    // <Expense color = "#99ffc2" sum = "200" category = "Food"/>
+
+export default function ExpensesNumbers(props)
 {
+
+    const renderItem = ({item}) => (
+        <Expense color = {item.color} sum = {item.sum} category = {item.category}/>
+    )
+
     return(
-        <ScrollView style = {styles.sview}>
-            <Expense color = "#99dfff" sum = "250" category = "Sport"/>
-            <View style = {{height : 12, width : 10}}/>
-            <Expense color = "#ffb699" sum = "100" category = "Shoping"/>
-            <View style = {{height : 12, width : 10}}/>
-            <Expense color = "#99ffc2" sum = "200" category = "Food"/>
-        </ScrollView>
+        <SafeAreaView style = {styles.sview}>
+            <FlatList
+                data = {props.expenses}
+                renderItem = {renderItem}
+                keyExtractor = {item => item.id}
+                showsVerticalScrollIndicator = {false}
+            />
+        </SafeAreaView>
     )
 }
 
@@ -18,8 +26,10 @@ function Expense(props)
 {
     return (
         <View style = {styles.expview}>
-            <View style = {{width : 30, height : 30, borderRadius : 20, backgroundColor : props.color}}/>
-            <Text style = {{fontSize : 28}}>{props.category}</Text>
+            <View style = {{flexDirection : 'row', alignItems : 'center', justifyContent : 'space-between'}}>
+                <View style = {{width : 30, height : 30, borderRadius : 20, backgroundColor : props.color}}/>
+                <Text style = {{fontSize : 28, textAlign : 'left'}}>   {props.category}</Text>
+            </View>
             <Text style = {{fontSize : 28, fontWeight : '400'}}>{props.sum} $</Text>
         </View>
     )
@@ -28,10 +38,11 @@ function Expense(props)
 const styles = StyleSheet.create({
     sview : {
         marginTop : 30,
+        height : '40%'
     },
     expview : {
         flexDirection : 'row',
-        width : 250,
+        width : '100%',
         justifyContent : 'space-between',
         alignItems : 'center'
     }

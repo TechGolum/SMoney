@@ -20,22 +20,25 @@ export default function NewExpense(props)
         }}>
             <View style = {styles.sview}>
 
-                <Text style = {styles.header}>Add new expence</Text>
+                <Text style = {styles.header}>Add new expense</Text>
 
                 <View style = {{width : '100%', alignItems : 'center'}}>
                     <Text style = {styles.stext}>Choose category:</Text>
+
                     <View style = {styles.categories}>
                         <Category name = 'school' text = 'Study' onTouchEnd = {() => {setSelected('Study')}} selected = {selected}/>
                         <Category name = 'storefront' text = 'Shop' onTouchEnd = {() => {setSelected('Shop')}} selected = {selected}/>
                         <Category name = 'euro' text = 'Bills' onTouchEnd = {() => {setSelected('Bills')}} selected = {selected}/>
                         <Category name = 'movie' text = 'Fun' onTouchEnd = {() => {setSelected('Fun')}} selected = {selected}/>
                     </View>
+
                     <View style = {styles.categories}>
                         <Category name = 'fastfood' text = 'Food' onTouchEnd = {() => {setSelected('Food')}} selected = {selected}/>
                         <Category name = 'train' text = 'Transport' onTouchEnd = {() => {setSelected('Transport')}} selected = {selected}/>
                         <Category name = 'spa' text = 'Health' onTouchEnd = {() => {setSelected('Health')}} selected = {selected}/>
                         <Category name = 'celebration' text = 'Gifts' onTouchEnd = {() => {setSelected('Gifts')}} selected = {selected}/>
                     </View>
+
                 </View>
 
                 <View style = {{width : '100%', alignItems : 'center'}}>
@@ -43,9 +46,11 @@ export default function NewExpense(props)
                     <TextInput placeholder = "  $$$" style = {styles.input} onChangeText = {setText} value = {' ' + text.replace(' ', '')} keyboardType  = 'numeric'/>
                 </View>
 
-                <TouchableOpacity style = {styles.button} onPress = {() => {props.setModalVisible(false)}}>
+                <TouchableOpacity style = {styles.button} onPress = {() => {if(props.balance - parseInt(text) >= 0){ props.setModalVisible(false); props.storeData(selected, text)}}}>
                     <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
                 </TouchableOpacity>
+
+                <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false)}}>Cancel</Text>
 
             </View>
         </Modal>
@@ -71,13 +76,14 @@ const styles = StyleSheet.create({
         bottom : 0,
         width : '100%',
         height : '100%',
+        maxWidth : 400,
+        alignItems : 'center'
     },
     header : {
         marginTop : 20,
         marginBottom : 20,
-        marginLeft : 30,
         fontSize : 30,
-        fontWeight : '600'
+        fontWeight : 'bold',
     },
     stext : {
         fontSize : 20,
@@ -93,6 +99,11 @@ const styles = StyleSheet.create({
         alignItems : 'center',
         marginTop : 30,
         alignSelf : 'center'
+    },
+    cancel : {
+        marginTop : 10,
+        fontSize : 18,
+        color : 'grey'
     },
     input : {
         width : 250,

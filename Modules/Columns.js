@@ -1,31 +1,40 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import Column from './Column'
 
-export default function Columns()
+
+// height should be from 0.3 to 1
+export default function Columns(props)
 {
-    // height should be from 0.3 to 1
+    const renderItem = ({item}) => (
+        <Column color = {item.color} height = {item.sum / props.balance * 100 + '%'}/>
+    )
+
     return(
         <View style = {styles.sview}>
-            <Column color = "#99dfff" height = {0.8}/>
-            <Column color = "#ffb699" height = {0.3}/>
-            <Column color = "#99ffc2" height = {0.6}/>
+            <SafeAreaView style = {{width : '95%', height : '100%', borderRadius : 20}}>
+                <FlatList
+                    renderItem = {renderItem}
+                    data = {props.expenses}
+                    keyExtractor = {item => item.id}
+                    horizontal = {true}
+                    showsHorizontalScrollIndicator = {false}
+                />
+            </SafeAreaView>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     sview : {
-        width : 250,
-        height : 150,
+        width : '110%',
+        height : '20%',
         backgroundColor : 'white',
         borderRadius : 20,
-        justifyContent : 'space-around',
-        flexDirection : 'row',
         alignItems : 'center',
         shadowColor : 'grey',
         shadowOpacity: 0.2,
-        shadowRadius: 8
-        
+        shadowRadius: 8,
+        elevation : 5
     }
 })
