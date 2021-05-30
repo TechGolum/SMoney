@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, SafeAreaView, FlatList } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
     // <Expense color = "#99ffc2" sum = "200" category = "Food"/>
 
@@ -11,14 +12,15 @@ export default function ExpensesNumbers(props)
     )
 
     return(
-        <SafeAreaView style = {styles.sview}>
+        <View
+        style = {styles.sview}>
             <FlatList
                 data = {props.expenses}
                 renderItem = {renderItem}
                 keyExtractor = {item => item.id}
                 showsVerticalScrollIndicator = {false}
             />
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -38,7 +40,8 @@ function Expense(props)
 const styles = StyleSheet.create({
     sview : {
         marginTop : 30,
-        height : '40%'
+        height : '40%',
+        borderRadius : 10
     },
     expview : {
         flexDirection : 'row',

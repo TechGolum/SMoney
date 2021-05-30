@@ -11,7 +11,7 @@ export default function Column(props)
                 { 
                     backgroundColor : props.color, 
                     height : parseInt(props.height.replace('%', '')) > 95 ? '95%' : props.height , 
-                    width : parseInt(props.height.replace('%', '')) > 12 ? '85%' : parseInt(props.height.replace('%', '')) > 8 ? '75%' : '60%' 
+                    width : parseInt(props.height.replace('%', '')) > 23 ? '85%' : parseInt(props.height.replace('%', '')) > 10 ? '70%' : '60%' 
                     }]}/>
             
             <View style = {{height : 3, width : '100%'}}/>

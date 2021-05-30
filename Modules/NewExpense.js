@@ -46,7 +46,8 @@ export default function NewExpense(props)
                     <TextInput placeholder = "  $$$" style = {styles.input} onChangeText = {setText} value = {' ' + text.replace(' ', '')} keyboardType  = 'numeric'/>
                 </View>
 
-                <TouchableOpacity style = {styles.button} onPress = {() => {if(props.balance - parseInt(text) >= 0){ props.setModalVisible(false); props.storeData(selected, text)}}}>
+                <TouchableOpacity style = {styles.button} onPress = {() => {
+                    if(props.balance - parseInt(text) >= 0){ props.setModalVisible(false); props.storeData(selected, text)}}}>
                     <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
                 </TouchableOpacity>
 

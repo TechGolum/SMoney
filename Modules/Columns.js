@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import Column from './Column'
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 // height should be from 0.3 to 1
@@ -11,7 +12,8 @@ export default function Columns(props)
     )
 
     return(
-        <View style = {styles.sview}>
+        <View
+            style = {styles.sview}>
             <SafeAreaView style = {{width : '95%', height : '100%', borderRadius : 20}}>
                 <FlatList
                     renderItem = {renderItem}
@@ -35,6 +37,6 @@ const styles = StyleSheet.create({
         shadowColor : 'grey',
         shadowOpacity: 0.2,
         shadowRadius: 8,
-        elevation : 5
+        elevation : 5,
     }
 })
