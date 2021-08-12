@@ -7,6 +7,7 @@ import Columns from './Modules/Columns'
 import ExpensesNumbers from './Modules/ExpensesNumbers'
 import NewExpense from './Modules/NewExpense'
 import NewBalance from './Modules/NewBalance'
+import ChangeColumn from './Modules/ChangeColumn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -23,7 +24,10 @@ export default function App()
 function Expenses(props)
 {
   const [expenseVisible, setExpenseVisible] = useState(false)
-  const [balanseVisible, setBalanseVisible] = useState(false)
+  const [balanceVisible, setBalanceVisible] = useState(false)
+  const [changeVisible, setChangeVisible] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState('')
+
   const [update, setUpdate] = useState(true)
   const [balance, setBalance] = useState(-1)
   const [data, setData] = useState([
@@ -102,19 +106,45 @@ function Expenses(props)
 
   }
 
+  function changeCategory(_category, _sum)
+  {
+    data.forEach(element => {
+      if(element.category == _category)
+      {
+        setBalance(balance + parseInt(element.sum) - parseInt(_sum))
+        element.sum = 0
+        element.sum += parseInt(_sum)
+        storeData(_category, (_sum).toString())
+      }
+    });
+
+  }
+
+  function getSpent(_category)
+  {
+    let spent = 0
+    data.forEach(element => {
+      if(element.category == _category)
+      {
+        spent = element.sum
+      }
+    });
+    return spent
+  }
+
   return(
     <View style = {styles.expView}>
-      <View onTouchEnd = {() => {setBalanseVisible(true)}}
+      <View onTouchEnd = {() => {setBalanceVisible(true)}}
        style = {{flexDirection : 'row', justifyContent : 'space-between', width : '100%'}}>
         <Text style = {[styles.balance, {}]}>Balance:</Text>
-        <Text style = {styles.balance}>{balance}$</Text>
+        <Text style = {styles.balance}>{balance}</Text>
       </View>
 
-      <Columns expenses = {data.filter(elem => elem.sum > 0)} balance = {total()}/>
-
-      <Text style = {styles.expText}>My expences</Text>
-
-      <ExpensesNumbers expenses = {data.filter(elem => elem.sum > 0)}/>
+      <Columns 
+        expenses = {data.filter(elem => elem.sum > 0)} 
+        balance = {total()} 
+        changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
+        />
 
       <TouchableOpacity style = {styles.button} onPress = {() => {setExpenseVisible(true)}}>
         <Text style = {{fontSize : 20, color : 'white', fontWeight : '500'}}> Add new expense</Text>
@@ -125,10 +155,19 @@ function Expenses(props)
         setModalVisible = {setExpenseVisible} 
         balance = {balance} 
         storeData = {(x, y) => {storeData('balance', (balance - parseInt(y)).toString()); changeBalance(x, y) }}/>
+      
       <NewBalance 
-        modalVisible = {balanseVisible} 
-        setModalVisible = {setBalanseVisible} balance = {balance} 
+        modalVisible = {balanceVisible} 
+        setModalVisible = {setBalanceVisible} balance = {balance} 
         changeBalance = {(x) => {if (parseInt(balance) + parseInt(x) >= 0){ storeData('balance', (balance + parseInt(x)).toString()); setBalance(parseInt(balance) + parseInt(x))}}}
+        />
+
+        <ChangeColumn
+          modalVisible = {changeVisible}
+          setModalVisible = {setChangeVisible}
+          category = {selectedCategory}
+          spent = {getSpent(selectedCategory)}
+          setCategory = {(x) => {changeCategory(selectedCategory, x)}}
         />
     </View>
   )
@@ -136,10 +175,10 @@ function Expenses(props)
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'white',
     width : '100%',
-    maxWidth: 400
+    maxWidth: 400,
+    height : '100%'
   },
   header:{
     marginTop : 50,
@@ -154,6 +193,7 @@ const styles = StyleSheet.create({
   expView : {
     marginTop : 30,
     width : '80%',
+    height : '100%',
     alignSelf : 'center',
     alignItems : 'center'
   },

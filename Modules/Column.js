@@ -4,15 +4,19 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function Column(props)
 {
     return(
-        <View style = {styles.sview}>
+        <View style = {styles.sview} onTouchEnd = {() => {props.onTouchEnd()}}>
             <View style = {{height : 3, width : '100%'}}/>
+
+            <Text style = {styles.text}>{props.category}</Text>
+            <Text style = {styles.text}>{props.sum}</Text>
 
             <View style = {[styles.svalue, 
                 { 
                     backgroundColor : props.color, 
-                    height : parseInt(props.height.replace('%', '')) > 95 ? '95%' : props.height , 
+                    height : parseInt(props.height.replace('%', '')) > 65 ? '65%' : props.height , 
                     width : parseInt(props.height.replace('%', '')) > 23 ? '85%' : parseInt(props.height.replace('%', '')) > 10 ? '70%' : '60%' 
-                    }]}/>
+                    }]}>
+            </View>
             
             <View style = {{height : 3, width : '100%'}}/>
         </View>
@@ -41,5 +45,8 @@ const styles = StyleSheet.create({
         width : '85%',
         height : '50%',
         borderRadius : 23,
+    },
+    text: {
+
     }
 })

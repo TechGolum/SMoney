@@ -20,9 +20,14 @@ export default function NewExpense(props)
         }}>
             <View style = {styles.sview}>
 
+
+
                 <Text style = {styles.header}>Add new expense</Text>
 
                 <View style = {{width : '100%', alignItems : 'center'}}>
+                    
+                    <Text style = {styles.stext}>Your balance: {props.balance}</Text>
+                    
                     <Text style = {styles.stext}>Choose category:</Text>
 
                     <View style = {styles.categories}>
@@ -43,15 +48,25 @@ export default function NewExpense(props)
 
                 <View style = {{width : '100%', alignItems : 'center'}}>
                     <Text style = {styles.stext}>How much have you spent?</Text>
-                    <TextInput placeholder = "  $$$" style = {styles.input} onChangeText = {setText} value = {' ' + text.replace(' ', '')} keyboardType  = 'numeric'/>
+                    <TextInput placeholder = "  " style = {styles.input} onChangeText = {setText} keyboardType  = 'numeric'/>
                 </View>
 
                 <TouchableOpacity style = {styles.button} onPress = {() => {
-                    if(props.balance - parseInt(text) >= 0){ props.setModalVisible(false); props.storeData(selected, text)}}}>
+                    if(props.balance - parseInt(text) >= 0)
+                    { 
+                        props.setModalVisible(false); 
+                        props.storeData(selected, text); 
+                        setSelected(''); setText(' ')
+                    }
+                    else
+                    {
+                        alert('Not enough money :(')
+                    }
+                    }}>
                     <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
                 </TouchableOpacity>
 
-                <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false)}}>Cancel</Text>
+                <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false); setSelected(''); setText(' ')}}>Cancel</Text>
 
             </View>
         </Modal>
@@ -111,7 +126,8 @@ const styles = StyleSheet.create({
         height : 50,
         backgroundColor:'rgb(235,235,235)',
         borderRadius : 10,
-        fontSize : 20
+        fontSize : 20,
+        textAlign : 'center'
     },
     categories : {
         display : 'flex',

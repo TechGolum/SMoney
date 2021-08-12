@@ -8,7 +8,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function Columns(props)
 {
     const renderItem = ({item}) => (
-        <Column color = {item.color} height = {item.sum / props.balance * 100 + '%'}/>
+        <Column 
+            color = {item.color} 
+            height = {item.sum / props.balance * 100 + '%'} 
+            category = {item.category} 
+            sum = {item.sum}
+            onTouchEnd = {() => {props.changeColumn(item.category)}}
+            />
     )
 
     return(

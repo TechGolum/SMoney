@@ -43,6 +43,8 @@ export default function NewBalance(props)
                 <TouchableOpacity style = {styles.button} onPress = {() => {props.setModalVisible(false)}}>
                     <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
                 </TouchableOpacity>
+
+                <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false)}}>Cancel</Text>
             </View>
         </Modal>
     )
@@ -98,5 +100,11 @@ const styles = StyleSheet.create({
         marginTop : 30,
         alignSelf : 'center',
         marginBottom : 10
+    },
+    cancel: {
+        fontSize : 15,
+        color : 'grey',
+        marginTop : 15,
+        alignSelf : 'center'
     }
 })
