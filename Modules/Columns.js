@@ -14,6 +14,7 @@ export default function Columns(props)
             category = {item.category} 
             sum = {item.sum}
             onTouchEnd = {() => {props.changeColumn(item.category)}}
+            width = {props.width}
             />
     )
 

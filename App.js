@@ -8,15 +8,27 @@ import ExpensesNumbers from './Modules/ExpensesNumbers'
 import NewExpense from './Modules/NewExpense'
 import NewBalance from './Modules/NewBalance'
 import ChangeColumn from './Modules/ChangeColumn';
+import Settings from './Modules/Settings'
+import SetUp from './Modules/Setup'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Icon} from 'react-native-elements'
 
 
 export default function App() 
 {
+  const [settingsVisible, setSettingsVisible] = useState(false)
   return (
     <View style={styles.container}>
+      <View style = {{justifyContent : 'space-between', flexDirection : 'row', alignItems :'center', marginTop : 50}}>
         <Text style = {styles.header}>SMoney</Text>
+        <Icon onTouchEnd = {() => {setSettingsVisible(true)}} name = 'settings' style = {{marginRight : 20}} size = {25}/>
+      </View>
         <Expenses/>
+
+        <Settings
+          modalVisible = {settingsVisible}
+          setModalVisible = {setSettingsVisible}
+        />
     </View>
   );
 }
@@ -26,10 +38,11 @@ function Expenses(props)
   const [expenseVisible, setExpenseVisible] = useState(false)
   const [balanceVisible, setBalanceVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
+  const [startVisible, setStartVisible] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('')
 
   const [update, setUpdate] = useState(true)
-  const [balance, setBalance] = useState(-1)
+  const [balance, setBalance] = useState(0)
   const [data, setData] = useState([
     {category : 'Study', sum : 0, color : '#99dfff'}, //blue
     {category : 'Shop', sum : 0, color : '#ffb699'}, // red
@@ -39,6 +52,11 @@ function Expenses(props)
     {category : 'Transport', sum : 0, color : '#dc5cff'}, //purple
     {category : 'Health', sum : 0, color : '#ff5c87'}, //pink
     {category : 'Gifts', sum : 0, color : '#ffb05c'}, //orange
+  ])
+  const [month, setMonth] = useState([
+    {id: 0, category: 'J', sum: 100, color : '#99dfff'},
+    {id: 1, category: 'F', sum: 20000, color : '#99dfff'},
+    {id: 2, category: 'M', sum: 30000, color : '#99dfff'}
   ])
 
   const getData = async (element) => {
@@ -74,12 +92,35 @@ function Expenses(props)
     }
   }
 
-  useEffect(() => {
-      data.forEach(element => {
-    getData(element)
-  })
+  const setSetup = async () => {
+    try 
+    {
+      await AsyncStorage.setItem('setup', 'true')
+    } catch (e) {
+      alert(e)
+    }
+  }
 
-  getBalance()
+  const getSetup = async () => {
+    try {
+      const value = await AsyncStorage.getItem('setup')
+      if(value == null) {
+        setStartVisible(true)
+        setSetup()
+      }
+      else {}
+    }
+    catch(e) {
+    }
+  }
+
+  
+  useEffect(() => {
+    getSetup()
+    data.forEach(element => {
+      getData(element)
+    })
+    getBalance()
   }, [])
 
 
@@ -106,14 +147,27 @@ function Expenses(props)
 
   }
 
-  function changeCategory(_category, _sum)
+  function changeCategory(_category, _sum, _option)
   {
     data.forEach(element => {
       if(element.category == _category)
       {
-        setBalance(balance + parseInt(element.sum) - parseInt(_sum))
-        element.sum = 0
-        element.sum += parseInt(_sum)
+        if(_option == 'Set')
+        {
+          setBalance(balance + parseInt(element.sum) - parseInt(_sum))
+          element.sum = 0
+          element.sum += parseInt(_sum)
+        }
+        if(_option == 'Plus')
+        {
+          setBalance(balance - parseInt(_sum))
+          element.sum += parseInt(_sum)
+        }
+        if(_option == 'Minus')
+        {
+          setBalance(balance + parseInt(_sum))
+          element.sum -= parseInt(_sum)
+        }
         storeData(_category, (_sum).toString())
       }
     });
@@ -135,7 +189,16 @@ function Expenses(props)
   return(
     <View style = {styles.expView}>
       <View onTouchEnd = {() => {setBalanceVisible(true)}}
-       style = {{flexDirection : 'row', justifyContent : 'space-between', width : '100%'}}>
+       style = {{
+         flexDirection : 'row', 
+         justifyContent : 'space-between', 
+         width : '110%',
+         backgroundColor : 'white',
+         elevation: 5,
+         marginBottom: 10,
+         alignItems: 'center',
+         borderRadius: 13
+         }}>
         <Text style = {[styles.balance, {}]}>Balance:</Text>
         <Text style = {styles.balance}>{balance}</Text>
       </View>
@@ -144,7 +207,15 @@ function Expenses(props)
         expenses = {data.filter(elem => elem.sum > 0)} 
         balance = {total()} 
         changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
+        width = {75}
         />
+
+      {/* <Columns 
+        expenses = {month.filter(elem => elem.sum > 0)} 
+        balance = {100000} 
+        changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
+        width = {50}
+        /> */}
 
       <TouchableOpacity style = {styles.button} onPress = {() => {setExpenseVisible(true)}}>
         <Text style = {{fontSize : 20, color : 'white', fontWeight : '500'}}> Add new expense</Text>
@@ -167,7 +238,13 @@ function Expenses(props)
           setModalVisible = {setChangeVisible}
           category = {selectedCategory}
           spent = {getSpent(selectedCategory)}
-          setCategory = {(x) => {changeCategory(selectedCategory, x)}}
+          balance = {balance}
+          setCategory = {(x, y) => {changeCategory(selectedCategory, x, y)}}
+        />
+
+        <SetUp
+          modalVisible = {startVisible}
+          setModalVisible = {setStartVisible}
         />
     </View>
   )
@@ -181,14 +258,15 @@ const styles = StyleSheet.create({
     height : '100%'
   },
   header:{
-    marginTop : 50,
+    //marginTop : 50,
     marginLeft: 30,
     fontSize: 40, 
     fontWeight : 'bold'
   },
   balance : {
-    fontSize : 30,
-    marginBottom : 20
+    fontSize : 35,
+    marginLeft : 10,
+    marginRight : 10,
     },
   expView : {
     marginTop : 30,

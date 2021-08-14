@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Modal } from 'react-native';
 import {Icon} from 'react-native-elements'
+import OkButton from './OkButton'
 
 let blue = '#2fa1ee'
 
@@ -8,7 +9,7 @@ export default function NewExpense(props)
 {
 
     const [selected, setSelected] = useState('study')
-    const [text, setText] = useState(' ')
+    const [sum, setSum] = useState('')
 
     return(
         <Modal
@@ -19,8 +20,6 @@ export default function NewExpense(props)
           props.setModalVisible(!props.modalVisible);
         }}>
             <View style = {styles.sview}>
-
-
 
                 <Text style = {styles.header}>Add new expense</Text>
 
@@ -48,25 +47,30 @@ export default function NewExpense(props)
 
                 <View style = {{width : '100%', alignItems : 'center'}}>
                     <Text style = {styles.stext}>How much have you spent?</Text>
-                    <TextInput placeholder = "  " style = {styles.input} onChangeText = {setText} keyboardType  = 'numeric'/>
+                    <TextInput placeholder = "  " style = {styles.input} onChangeText = {setSum} keyboardType  = 'numeric'/>
                 </View>
 
-                <TouchableOpacity style = {styles.button} onPress = {() => {
-                    if(props.balance - parseInt(text) >= 0)
-                    { 
-                        props.setModalVisible(false); 
-                        props.storeData(selected, text); 
-                        setSelected(''); setText(' ')
-                    }
-                    else
-                    {
-                        alert('Not enough money :(')
-                    }
-                    }}>
-                    <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
-                </TouchableOpacity>
+                <OkButton style = {{marginTop : 30,alignSelf : 'center'}} 
+                    onPress = {() => {
+                        if(sum != '' && props.balance - parseInt(sum) >= 0)
+                        { 
+                            props.setModalVisible(false);
+                            props.storeData(selected, sum); 
+                            setSelected(''); setSum(' ')
+                        }
+                        else
+                        { 
+                            if(sum == '')
+                            {
+                                props.setModalVisible(false)
+                            }
+                            else
+                                alert('Not enough money :(')
+                        }
+                        }}
+                    />
 
-                <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false); setSelected(''); setText(' ')}}>Cancel</Text>
+                <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false); setSelected(''); setSum(' ')}}>Cancel</Text>
 
             </View>
         </Modal>
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
         width : '100%',
         height : '100%',
         maxWidth : 400,
-        alignItems : 'center'
+        alignItems : 'center',
     },
     header : {
         marginTop : 20,
@@ -105,16 +109,6 @@ const styles = StyleSheet.create({
         fontSize : 20,
         fontWeight: '500',
         marginBottom: 20
-    },
-    button : {
-        backgroundColor : '#2fa1ee',
-        width : 250,
-        height : 50,
-        borderRadius : 10,
-        justifyContent : 'center',
-        alignItems : 'center',
-        marginTop : 30,
-        alignSelf : 'center'
     },
     cancel : {
         marginTop : 10,

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Modal, TextInput,TouchableOpacity } from 'react-native';
+import OkButton from './OkButton'
 
 export default function NewBalance(props)
 {
@@ -24,7 +25,7 @@ export default function NewBalance(props)
             <View style = {styles.sview}>
                 <Text style = {styles.header}>Your balance</Text>
 
-                <Text style = {{fontSize : 80, marginTop : 100, marginBottom : 100}}>{props.balance}$</Text>
+                <Text style = {{fontSize : 80, marginTop : 100, marginBottom : 100}}>{props.balance}</Text>
 
                 <View style = {styles.buttonsrow}>
                     <ChangeBalanceButton text = '-10' num = '-10'/>
@@ -40,9 +41,10 @@ export default function NewBalance(props)
                     <ChangeBalanceButton text = '+1K' num = '1000'/>
                 </View>
 
-                <TouchableOpacity style = {styles.button} onPress = {() => {props.setModalVisible(false)}}>
-                    <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
-                </TouchableOpacity>
+                <OkButton 
+                    style = {{marginTop : 30, alignSelf : 'center',marginBottom : 10}} 
+                    onPress = {() => {props.setModalVisible(false)}}
+                    />
 
                 <Text style = {styles.cancel} onTouchEnd = {() => {props.setModalVisible(false)}}>Cancel</Text>
             </View>
@@ -89,17 +91,6 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         marginBottom: 20,
         marginTop  : 30
-    },
-    button : {
-        backgroundColor : '#2fa1ee',
-        width : 250,
-        height : 50,
-        borderRadius : 10,
-        justifyContent : 'center',
-        alignItems : 'center',
-        marginTop : 30,
-        alignSelf : 'center',
-        marginBottom : 10
     },
     cancel: {
         fontSize : 15,

@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Modal, TextInput,TouchableOpacity } from 'react-native';
+import OkButton from './OkButton'
 
 export default function ChangeColumn(props)
 {
     const [sum, setSum] = useState('')
+    const [selectedOption, setSelectedOption] = useState('Set')
+    const Option = (prop)=>{return(
+        <View onTouchEnd = {() => {setSelectedOption(prop.text)}}
+        style = {{
+            backgroundColor : prop.text == selectedOption ? 'white' : '#eee',
+            width: '33%',
+            borderRadius : 20,
+            height: '100%',
+            justifyContent: 'center',
+        }}>
+            <Text style = {{fontSize: 20, textAlign: 'center'}}>{prop.text}</Text>
+        </View>
+    )}
     return(
         <Modal
         animationType="slide"
@@ -14,14 +28,50 @@ export default function ChangeColumn(props)
         }}>
             <View style = {styles.container}>
                 <Text style = {styles.category}>{props.category}</Text>
-                <Text style = {styles.spent}>You have spent on {(props.category).toLowerCase()}: {props.spent}</Text>
-                <Text style = {styles.spent}>Update:</Text>
+                <Text style = {[styles.text, {fontSize: 30}]}>Balance: {props.balance}</Text>
+                <Text style = {styles.text}>Spent on {(props.category).toLowerCase()}: {props.spent}</Text>
+                <View style = {
+                    {
+                        justifyContent : 'space-around',
+                        flexDirection : 'row',
+                        width: 250,
+                        alignSelf : 'center',
+                        elevation: 4,
+                        marginBottom: 20,
+                        borderRadius: 20,
+                        backgroundColor: '#eee',
+                        height: 50,
+                        alignItems :'center'
+                    }}>
+                        <Option text = 'Set'/>
+                        <Option text = 'Plus'/>
+                        <Option text = 'Minus'/>
+                </View>
 
                 <TextInput style = {styles.input} keyboardType = 'numeric' onChangeText = {setSum}/>
 
-                <TouchableOpacity style = {styles.button} onPress = {() => {props.setCategory(sum); props.setModalVisible(false)}}>
-                    <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
-                </TouchableOpacity>
+                <OkButton 
+                    style = {{marginTop : 30, alignSelf : 'center'}}
+                    onPress = {() => {
+                        if(sum != '' && (selectedOption == 'Set' && sum <= parseInt(props.balance) + parseInt(props.spent))
+                        || (selectedOption == 'Plus' && props.balance >= parseInt(sum) + parseInt(props.spent))
+                        || (selectedOption == 'Minus' && props.spent >= sum)
+                        ) 
+                        {
+                            props.setCategory(sum, selectedOption);        
+                            props.setModalVisible(false)
+                        }
+                        else
+                        {
+                            if(sum == '')
+                            {
+                                props.setModalVisible(false)
+                            }
+                            else
+                                alert('Not enough money')
+                        }
+                    }}
+                    />
 
                 <Text style = {styles.cancel} onPress = {() => {props.setModalVisible(false)}}>Cancel</Text>
             </View>
@@ -39,9 +89,10 @@ const styles = StyleSheet.create({
     category : {
         fontSize : 40,
         marginTop : 30,
-        margin : 20
+        margin : 20,
+        fontWeight : 'bold'
     },
-    spent : {
+    text : {
         fontSize : 25,
         marginTop : 0,
         marginBottom : 20,
@@ -61,15 +112,5 @@ const styles = StyleSheet.create({
         color : 'grey',
         marginTop : 15,
         alignSelf : 'center'
-    },
-    button : {
-        backgroundColor : '#2fa1ee',
-        width : 250,
-        height : 50,
-        borderRadius : 10,
-        justifyContent : 'center',
-        alignItems : 'center',
-        marginTop : 30,
-        alignSelf : 'center'
-    },
+    }
 })
