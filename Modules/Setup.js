@@ -5,6 +5,7 @@ import OkButton from './OkButton'
 
 export default function SetUp(props)
 {
+    const [text, setText] = useState('')
     return(
         <Modal
         animationType="slide"
@@ -39,8 +40,17 @@ export default function SetUp(props)
                         textAlign : 'center',
                         marginTop: 20
                     }}
+                    onChangeText = {setText}
+                    keyboardType = 'numeric'
                 />
-                <OkButton style = {{alignSelf: 'center', marginTop: 20}}/>
+                <OkButton onPress = {() => {
+                    if(text == '')
+                        props.setBalance(10000)
+                    else
+                        props.setBalance(parseInt(text))
+                    props.setModalVisible(false)
+                    }} 
+                    style = {{alignSelf: 'center', marginTop: 20}}/>
             </View>
         </Modal>
     )

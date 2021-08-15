@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react
 import { BackgroundImage } from 'react-native-elements/dist/config';
 import { patchWebProps } from 'react-native-elements/dist/helpers';
 import Columns from './Modules/Columns'
-import ExpensesNumbers from './Modules/ExpensesNumbers'
 import NewExpense from './Modules/NewExpense'
 import NewBalance from './Modules/NewBalance'
 import ChangeColumn from './Modules/ChangeColumn';
@@ -154,21 +153,24 @@ function Expenses(props)
       {
         if(_option == 'Set')
         {
-          setBalance(balance + parseInt(element.sum) - parseInt(_sum))
+          storeData('balance', (parseInt(balance) + parseInt(element.sum) - parseInt(_sum)).toString())
+          setBalance(parseInt(balance) + parseInt(element.sum) - parseInt(_sum))
           element.sum = 0
           element.sum += parseInt(_sum)
         }
         if(_option == 'Plus')
         {
-          setBalance(balance - parseInt(_sum))
+          storeData('balance', (parseInt(balance) - parseInt(_sum)).toString())
+          setBalance(parseInt(balance) - parseInt(_sum))
           element.sum += parseInt(_sum)
         }
         if(_option == 'Minus')
         {
-          setBalance(balance + parseInt(_sum))
+          storeData('balance', (parseInt(balance) + parseInt(_sum)).toString())
+          setBalance(parseInt(balance) + parseInt(_sum))
           element.sum -= parseInt(_sum)
         }
-        storeData(_category, (_sum).toString())
+        storeData(_category, (element.sum).toString())
       }
     });
 
@@ -205,7 +207,7 @@ function Expenses(props)
 
       <Columns 
         expenses = {data.filter(elem => elem.sum > 0)} 
-        balance = {total()} 
+        balance = {total() - balance} 
         changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
         width = {75}
         />
@@ -245,6 +247,7 @@ function Expenses(props)
         <SetUp
           modalVisible = {startVisible}
           setModalVisible = {setStartVisible}
+          setBalance = {(x)=>{setBalance(x); storeData('balance', x.toString())}}
         />
     </View>
   )

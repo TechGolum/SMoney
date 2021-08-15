@@ -53,8 +53,9 @@ export default function ChangeColumn(props)
                 <OkButton 
                     style = {{marginTop : 30, alignSelf : 'center'}}
                     onPress = {() => {
-                        if(sum != '' && (selectedOption == 'Set' && sum <= parseInt(props.balance) + parseInt(props.spent))
-                        || (selectedOption == 'Plus' && props.balance >= parseInt(sum) + parseInt(props.spent))
+                        if(sum != '' && 
+                        (selectedOption == 'Set' && sum <= parseInt(props.balance) + parseInt(props.spent))
+                        || (selectedOption == 'Plus' && props.balance >= parseInt(sum))
                         || (selectedOption == 'Minus' && props.spent >= sum)
                         ) 
                         {
@@ -68,7 +69,9 @@ export default function ChangeColumn(props)
                                 props.setModalVisible(false)
                             }
                             else
+                            {
                                 alert('Not enough money')
+                            }
                         }
                     }}
                     />
