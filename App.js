@@ -3,27 +3,42 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { BackgroundImage } from 'react-native-elements/dist/config';
 import { patchWebProps } from 'react-native-elements/dist/helpers';
+
 import Columns from './Modules/Columns'
 import NewExpense from './Modules/NewExpense'
 import NewBalance from './Modules/NewBalance'
 import ChangeColumn from './Modules/ChangeColumn';
 import Settings from './Modules/Settings'
 import SetUp from './Modules/Setup'
+import Months from './Modules/Months'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Icon} from 'react-native-elements'
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo-font';
+import AppLoading from 'expo-app-loading';
 
 export default function App() 
 {
   const [settingsVisible, setSettingsVisible] = useState(false)
-  useEffect(() => {
-    Font.loadAsync({
+  const [load, setLoad] = useState(false)
+  const fetchFonts = () => {
+    return Font.loadAsync({
       'sf-black': require('./assets/SFCompactRounded-Black.otf'),
       'sf-medium': require('./assets/SFCompactRounded-Medium.otf'),
       'sf-bold': require('./assets/SFCompactRounded-Bold.otf'),
     })
-    },[])
+    }
+
+    if(!load)
+    {
+      return(
+        <AppLoading
+          startAsync = {fetchFonts}
+          onFinish = {() => setLoad(true)}
+          onError = {() => {}}
+        />
+      );
+    }
 
   return (
     <View style={styles.container}>
@@ -43,11 +58,16 @@ export default function App()
 
 function Expenses(props)
 {
+  let date = new Date()
+  let month = date.getMonth()
+
   const [expenseVisible, setExpenseVisible] = useState(false)
   const [balanceVisible, setBalanceVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
   const [startVisible, setStartVisible] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedMonth, setSelectedMonth] = useState(month)
+  const [spentSelMonth, setSpentSelMonth] = useState(0)
 
   const [update, setUpdate] = useState(true)
   const [balance, setBalance] = useState(0)
@@ -61,11 +81,38 @@ function Expenses(props)
     {category : 'Health', sum : 0, color : '#ff5c87'}, //pink
     {category : 'Gifts', sum : 0, color : '#ffb05c'}, //orange
   ])
-  const [month, setMonth] = useState([
-    {id: 0, category: 'J', sum: 100, color : '#99dfff'},
-    {id: 1, category: 'F', sum: 20000, color : '#99dfff'},
-    {id: 2, category: 'M', sum: 30000, color : '#99dfff'}
+  const [months, setMonths] = useState([
+    {id: 0, category: 'J', sum: 0, color : '#99dfff'},
+    {id: 1, category: 'F', sum: 0, color : '#99dfff'},
+    {id: 2, category: 'M', sum: 0, color : '#99dfff'},
+    {id: 3, category: 'A', sum: 0, color : '#99dfff'},
+    {id: 4, category: 'M', sum: 0, color : '#99dfff'},
+    {id: 5, category: 'J', sum: 0, color : '#99dfff'},
+    {id: 6, category: 'J', sum: 0, color : '#99dfff'},
+    {id: 7, category: 'A', sum: 0, color : '#99dfff'},
+    {id: 8, category: 'S', sum: 0, color : '#99dfff'},
+    {id: 9, category: 'O', sum: 0, color : '#99dfff'},
+    {id: 10, category: 'N', sum: 0, color : '#99dfff'},
+    {id: 11, category: 'D', sum: 0, color : '#99dfff'},
   ])
+
+  function getMonthName(n)
+  {
+    var month = new Array();
+    month[0] = "January";
+    month[1] = "February";
+    month[2] = "March";
+    month[3] = "April";
+    month[4] = "May";
+    month[5] = "June";
+    month[6] = "July";
+    month[7] = "August";
+    month[8] = "September";
+    month[9] = "October";
+    month[10] = "November";
+    month[11] = "December";
+    return month[n]
+  }
 
   const getData = async (element) => {
     try {
@@ -83,6 +130,7 @@ function Expenses(props)
       const value = await AsyncStorage.getItem('balance')
       if(value !== null) {
         setBalance(parseInt(value))
+        setSpentSelMonth(total() - balance)
       }
       else {}
     }
@@ -90,6 +138,58 @@ function Expenses(props)
     }
   }
 
+  const storeMonthData = async () => {
+    try 
+    {
+      await AsyncStorage.setItem(getMonthName(month), (total() - balance).toString())
+    } 
+    catch (e) {
+      alert(e)
+    }
+  }
+
+  const getMonthData = async (id) => {
+    try {
+      const value = await AsyncStorage.getItem(getMonthName(id))
+      if(value !== null) {
+        months.forEach(element => {
+          if(element.id == id)
+          {
+            element.sum = 0
+            element.sum += parseInt(value)
+          }
+        })
+      }
+      else {
+      }
+    }
+    catch(e) {
+    }
+  }
+
+  function setMonthData(id)
+  {
+    months.forEach(element => {
+      if(element.id == id)
+      {
+        element.sum = 0
+        element.sum += (total() - balance)
+      }
+    })
+  }
+
+  function getYearSpendings()
+  {
+    months.forEach(elem => {
+      getMonthData(elem.id)
+    })
+    let total = 0
+    months.forEach(element => {
+      total += parseInt(element.sum)
+    })
+    
+    return total
+  }
 
   const storeData = async (_category, _sum) => {
     try 
@@ -129,6 +229,10 @@ function Expenses(props)
       getData(element)
     })
     getBalance()
+    months.forEach(element => {
+      getMonthData(element.id)
+    })
+
   }, [])
 
 
@@ -180,6 +284,8 @@ function Expenses(props)
           element.sum -= parseInt(_sum)
         }
         storeData(_category, (element.sum).toString())
+        storeMonthData()
+        setMonthData(month)
       }
     });
 
@@ -195,6 +301,17 @@ function Expenses(props)
       }
     });
     return spent
+  }
+
+  function setSelectedSpent(i)
+  {
+    months.forEach(elem => {
+      if(elem.id == i)
+      {
+        setSpentSelMonth(elem.sum)
+        return;
+      }
+    })
   }
 
   return(
@@ -214,19 +331,23 @@ function Expenses(props)
         <Text style = {styles.balance}>{balance}</Text>
       </View>
 
+      <Months
+        expenses = {months} 
+        balance = {getYearSpendings()} 
+        changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
+        width = {25}
+        month = {getMonthName(selectedMonth)}
+        spent = {spentSelMonth}
+        selectedMonth = {selectedMonth}
+        onPress = {(id) => {setSelectedMonth(id); setSelectedSpent(id)}}
+        />
+        
       <Columns 
         expenses = {data.filter(elem => elem.sum > 0)} 
         balance = {total() - balance} 
         changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
         width = {75}
         />
-
-      {/* <Columns 
-        expenses = {month.filter(elem => elem.sum > 0)} 
-        balance = {100000} 
-        changeColumn = {(x) => {setSelectedCategory(x); setChangeVisible(true)}}
-        width = {50}
-        /> */}
 
       <TouchableOpacity style = {styles.button} onPress = {() => {setExpenseVisible(true)}}>
         <Text style = {{fontSize : 20, color : 'white', fontFamily: 'sf-medium'}}> Add new expense</Text>
@@ -236,7 +357,7 @@ function Expenses(props)
         modalVisible = {expenseVisible} 
         setModalVisible = {setExpenseVisible} 
         balance = {balance} 
-        storeData = {(x, y) => {storeData('balance', (balance - parseInt(y)).toString()); changeBalance(x, y) }}/>
+        storeData = {(x, y) => {storeData('balance', (balance - parseInt(y)).toString()); changeBalance(x, y); storeMonthData(); setMonthData(month)}}/>
       
       <NewBalance 
         modalVisible = {balanceVisible} 

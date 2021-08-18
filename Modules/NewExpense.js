@@ -52,7 +52,7 @@ export default function NewExpense(props)
 
                 <OkButton style = {{marginTop : 30,alignSelf : 'center'}} 
                     onPress = {() => {
-                        if(sum != '' && study != '' && props.balance - parseInt(sum) >= 0)
+                        if(sum != '' && selected != '' && props.balance - parseInt(sum) >= 0)
                         { 
                             props.setModalVisible(false);
                             props.storeData(selected, sum); 
