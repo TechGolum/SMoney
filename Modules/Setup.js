@@ -3,6 +3,20 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Modal } from 'reac
 import {Icon} from 'react-native-elements'
 import OkButton from './OkButton'
 
+const Txt = (props) => {
+    return(
+        <Text
+            style = {[{
+                fontSize: 35,
+                margin: 10,
+                marginTop: 30,
+                fontFamily: 'sf-medium'
+            }, props.style]}>
+            {props.text}
+        </Text>
+    )
+}
+
 export default function SetUp(props)
 {
     const [text, setText] = useState('')
@@ -19,16 +33,9 @@ export default function SetUp(props)
                 width: '100%',
                 backgroundColor: 'white'
             }}>
-                <Text style={{
-                    fontSize: 35,
-                    margin: 5,
-                    marginTop: 30
-                }}>Hello! This is SMoney, simple spendings tracker</Text>
-                <Text style = {{
-                    fontSize: 35,
-                    margin: 5,
-                    marginTop: 30
-                }}>What's your budget?</Text>
+                <Txt text = 'Hello!'/>
+                <Txt text = 'This is SMoney, simple spendings tracker'/>
+                <Txt text = 'Whats your budget?' style = {{textAlign : 'center'}}/>
                 <TextInput
                     style = {{
                         width : 300,
@@ -38,7 +45,8 @@ export default function SetUp(props)
                         fontSize : 20,
                         alignSelf : 'center',
                         textAlign : 'center',
-                        marginTop: 20
+                        marginTop: 20,
+                        fontFamily:'sf-medium'
                     }}
                     onChangeText = {setText}
                     keyboardType = 'numeric'

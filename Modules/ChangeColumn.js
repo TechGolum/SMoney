@@ -15,7 +15,7 @@ export default function ChangeColumn(props)
             height: '100%',
             justifyContent: 'center',
         }}>
-            <Text style = {{fontSize: 20, textAlign: 'center'}}>{prop.text}</Text>
+            <Text style = {{fontSize: 20, textAlign: 'center', fontFamily: 'sf-medium'}}>{prop.text}</Text>
         </View>
     )}
     return(
@@ -53,13 +53,14 @@ export default function ChangeColumn(props)
                 <OkButton 
                     style = {{marginTop : 30, alignSelf : 'center'}}
                     onPress = {() => {
-                        if(sum != '' && 
-                        (selectedOption == 'Set' && sum <= parseInt(props.balance) + parseInt(props.spent))
+                        if(sum != '' && sum != null &&
+                        ((selectedOption == 'Set' && sum <= parseInt(props.balance) + parseInt(props.spent))
                         || (selectedOption == 'Plus' && props.balance >= parseInt(sum))
-                        || (selectedOption == 'Minus' && props.spent >= sum)
+                        || (selectedOption == 'Minus' && props.spent >= sum))
                         ) 
                         {
-                            props.setCategory(sum, selectedOption);        
+                            props.setCategory(sum, selectedOption); 
+                            setSum('')
                             props.setModalVisible(false)
                         }
                         else
@@ -93,13 +94,15 @@ const styles = StyleSheet.create({
         fontSize : 40,
         marginTop : 30,
         margin : 20,
-        fontWeight : 'bold'
+        // fontWeight : 'bold',
+        fontFamily : 'sf-bold'
     },
     text : {
         fontSize : 25,
         marginTop : 0,
         marginBottom : 20,
-        textAlign : 'center'
+        textAlign : 'center',
+        fontFamily: 'sf-medium'
     },
     input : {
         width : 250,
@@ -108,12 +111,14 @@ const styles = StyleSheet.create({
         borderRadius : 10,
         fontSize : 20,
         alignSelf : 'center',
-        textAlign : 'center'
+        textAlign : 'center',
+        fontFamily: 'sf-medium'
     },
     cancel : {
         fontSize : 15,
         color : 'grey',
         marginTop : 15,
-        alignSelf : 'center'
+        alignSelf : 'center',
+        fontFamily: 'sf-medium'
     }
 })

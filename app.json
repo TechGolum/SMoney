@@ -4,9 +4,9 @@
     "slug": "SMoney",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/SMoneyIcon.jpg",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

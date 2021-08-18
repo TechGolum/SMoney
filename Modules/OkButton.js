@@ -5,7 +5,7 @@ export default function OkButton(props)
 {
     return(
         <TouchableOpacity style = {[styles.button, props.style]} onPress = {() => {props.onPress()}}>
-            <Text style = {{fontSize : 20, color : 'white'}}>OK</Text>
+            <Text style = {{fontSize : 20, color : 'white', fontFamily: 'sf-medium'}}>OK</Text>
         </TouchableOpacity>
     );
 }

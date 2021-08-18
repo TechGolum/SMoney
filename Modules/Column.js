@@ -7,8 +7,8 @@ export default function Column(props)
         <View style = {[styles.sview, {width : props.width}]} onTouchEnd = {() => {props.onTouchEnd()}}>
             <View style = {{height : 3, width : '100%'}}/>
 
-            <Text style = {[styles.text, {fontWeight:'bold'}]}>{props.category}</Text>
-            <Text style = {styles.text}>{props.sum}</Text>
+            <Text style = {{fontFamily:'sf-bold'}}>{props.category}</Text>
+            <Text style = {{fontFamily: 'sf-medium'}}>{props.sum}</Text>
 
             <View style = {[styles.svalue, 
                 { 

@@ -44,7 +44,8 @@ const Themes = (props) => {
 
                 <Text style = {{
                     textAlign: 'center',
-                    fontSize: 17
+                    fontSize: 17,
+                    fontFamily: 'sf-medium'
                 }}>
                     {prop.text}
                 </Text>
@@ -83,7 +84,8 @@ const styles = StyleSheet.create({
         fontSize : 40,
         marginTop : 30,
         margin : 20,
-        fontWeight : 'bold',
-        alignSelf:'flex-start'
+        // fontWeight : 'bold',
+        alignSelf:'flex-start',
+        fontFamily:'sf-bold'
     }
 })

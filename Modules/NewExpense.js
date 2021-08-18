@@ -8,7 +8,7 @@ let blue = '#2fa1ee'
 export default function NewExpense(props)
 {
 
-    const [selected, setSelected] = useState('study')
+    const [selected, setSelected] = useState('')
     const [sum, setSum] = useState('')
 
     return(
@@ -47,16 +47,17 @@ export default function NewExpense(props)
 
                 <View style = {{width : '100%', alignItems : 'center'}}>
                     <Text style = {styles.stext}>How much have you spent?</Text>
-                    <TextInput placeholder = "  " style = {styles.input} onChangeText = {setSum} keyboardType  = 'numeric'/>
+                    <TextInput placeholder = "" style = {styles.input} onChangeText = {setSum} keyboardType  = 'numeric'/>
                 </View>
 
                 <OkButton style = {{marginTop : 30,alignSelf : 'center'}} 
                     onPress = {() => {
-                        if(sum != '' && props.balance - parseInt(sum) >= 0)
+                        if(sum != '' && study != '' && props.balance - parseInt(sum) >= 0)
                         { 
                             props.setModalVisible(false);
                             props.storeData(selected, sum); 
-                            setSelected(''); setSum(' ')
+                            setSelected(''); 
+                            setSum('')
                         }
                         else
                         { 
@@ -85,7 +86,7 @@ function Category(props)
             style = {[styles.icon, {backgroundColor : props.selected == props.text ? blue : 'white'}]}>
                 <Icon name = {props.name} color = {props.selected == props.text ? 'white' : 'black'}/>
             </View>
-            <Text style = {{fontSize : 12, textAlign : 'center'}}>{props.text}</Text>
+            <Text style = {{fontSize : 12, textAlign : 'center', fontFamily: 'sf-medium'}}>{props.text}</Text>
         </View>
     )
 }
@@ -103,17 +104,20 @@ const styles = StyleSheet.create({
         marginTop : 20,
         marginBottom : 20,
         fontSize : 30,
-        fontWeight : 'bold',
+        // fontWeight : 'bold',
+        fontFamily: 'sf-bold'
     },
     stext : {
         fontSize : 20,
         fontWeight: '500',
-        marginBottom: 20
+        marginBottom: 20,
+        fontFamily : 'sf-medium'
     },
     cancel : {
         marginTop : 10,
         fontSize : 18,
-        color : 'grey'
+        color : 'grey',
+        fontFamily : 'sf-medium'
     },
     input : {
         width : 250,
@@ -121,7 +125,8 @@ const styles = StyleSheet.create({
         backgroundColor:'rgb(235,235,235)',
         borderRadius : 10,
         fontSize : 20,
-        textAlign : 'center'
+        textAlign : 'center',
+        fontFamily: 'sf-medium'
     },
     categories : {
         display : 'flex',

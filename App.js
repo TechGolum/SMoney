@@ -11,15 +11,24 @@ import Settings from './Modules/Settings'
 import SetUp from './Modules/Setup'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Icon} from 'react-native-elements'
-
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo-font';
 
 export default function App() 
 {
   const [settingsVisible, setSettingsVisible] = useState(false)
+  useEffect(() => {
+    Font.loadAsync({
+      'sf-black': require('./assets/SFCompactRounded-Black.otf'),
+      'sf-medium': require('./assets/SFCompactRounded-Medium.otf'),
+      'sf-bold': require('./assets/SFCompactRounded-Bold.otf'),
+    })
+    },[])
+
   return (
     <View style={styles.container}>
       <View style = {{justifyContent : 'space-between', flexDirection : 'row', alignItems :'center', marginTop : 50}}>
-        <Text style = {styles.header}>SMoney</Text>
+        <Text style = {[styles.header]}>SMoney</Text>
         <Icon onTouchEnd = {() => {setSettingsVisible(true)}} name = 'settings' style = {{marginRight : 20}} size = {25}/>
       </View>
         <Expenses/>
@@ -220,7 +229,7 @@ function Expenses(props)
         /> */}
 
       <TouchableOpacity style = {styles.button} onPress = {() => {setExpenseVisible(true)}}>
-        <Text style = {{fontSize : 20, color : 'white', fontWeight : '500'}}> Add new expense</Text>
+        <Text style = {{fontSize : 20, color : 'white', fontFamily: 'sf-medium'}}> Add new expense</Text>
       </TouchableOpacity>
 
       <NewExpense 
@@ -264,12 +273,14 @@ const styles = StyleSheet.create({
     //marginTop : 50,
     marginLeft: 30,
     fontSize: 40, 
-    fontWeight : 'bold'
+    // fontWeight : 'bold',
+    fontFamily: 'sf-bold'
   },
   balance : {
     fontSize : 35,
     marginLeft : 10,
     marginRight : 10,
+    fontFamily: 'sf-medium'
     },
   expView : {
     marginTop : 30,
